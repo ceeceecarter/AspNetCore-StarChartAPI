@@ -23,12 +23,12 @@ namespace StarChartTests
             var model = TestHelpers.GetUserType("StarChart.Models.CelestialObject");
 
             var item = Activator.CreateInstance(model);
-            model.GetProperty("Id").SetValue(item, 1);
-            model.GetProperty("Name").SetValue(item, "Sun");
+            model.GetProperty("Id")?.SetValue(item, 1);
+            model.GetProperty("Name")?.SetValue(item, "Sun");
             var item2 = Activator.CreateInstance(model);
-            model.GetProperty("Id").SetValue(item2, 2);
-            model.GetProperty("Name").SetValue(item2, "Earth");
-            model.GetProperty("OrbitedObjectId").SetValue(item2, 1);
+            model.GetProperty("Id")?.SetValue(item2, 2);
+            model.GetProperty("Name")?.SetValue(item2, "Earth");
+            model.GetProperty("OrbitedObjectId")?.SetValue(item2, 1);
 
             var optionsBuilder = new DbContextOptionsBuilder();
             optionsBuilder.UseInMemoryDatabase("Test");
@@ -45,10 +45,9 @@ namespace StarChartTests
             Assert.True(method.ReturnType == typeof(IActionResult), "`CelestialObjectController`'s `GetById` action was found, but does not have a return type of `IActionResult`.");
             var getAttribute = method.GetCustomAttributes(typeof(HttpGetAttribute), false).FirstOrDefault() as HttpGetAttribute;
             Assert.True(getAttribute != null && getAttribute.Template == "{id:int}", "`CelestialObjectController`'s `GetById` action was found, but does not have an `HttpGet` attribute with a template of `{id:int}`.");
-            var notFoundResults = method.Invoke(celestialController, new object[] { 3 }) as NotFoundResult;
-            Assert.True(notFoundResults != null, "`CelestialObjectController`'s `GetById` action did not return the `NotFound` when no `CelestialObject` with a matching `Id` was found.");
+            Assert.True(method.Invoke(celestialController, new object[] { 3 }) is NotFoundResult notFoundResults, "`CelestialObjectController`'s `GetById` action did not return the `NotFound` when no `CelestialObject` with a matching `Id` was found.");
             var okResults = method.Invoke(celestialController, new object[] { 1 }) as OkObjectResult;
-            Assert.True(okResults != null && okResults.Value != null, "`CelestialObjectController`'s `GetById` action did not return an `Ok` with the `CelestialObject` that has a matching `Id` when one was found.");
+            Assert.True(okResults?.Value != null, "`CelestialObjectController`'s `GetById` action did not return an `Ok` with the `CelestialObject` that has a matching `Id` when one was found.");
             Assert.True((int)model.GetProperty("Id")?.GetValue(okResults.Value) == 1, "`CelestialObjectController`'s `GetById` action returned an `Ok` with a `CelestialObject`, however; the `Id` does not appear to match the one provided by the parameter.");
             Assert.True(model.GetProperty("Satellites")?.GetValue(okResults.Value) != null, "`CelestialObjectController`'s `GetById` action returned an `Ok` with a `CelestialObject`, however; the `Satellites` property was not set.");
         }
@@ -65,12 +64,12 @@ namespace StarChartTests
             var model = TestHelpers.GetUserType("StarChart.Models.CelestialObject");
 
             var item = Activator.CreateInstance(model);
-            model.GetProperty("Id").SetValue(item, 1);
-            model.GetProperty("Name").SetValue(item, "Sun");
+            model.GetProperty("Id")?.SetValue(item, 1);
+            model.GetProperty("Name")?.SetValue(item, "Sun");
             var item2 = Activator.CreateInstance(model);
-            model.GetProperty("Id").SetValue(item2, 2);
-            model.GetProperty("Name").SetValue(item2, "Earth");
-            model.GetProperty("OrbitedObjectId").SetValue(item2, 1);
+            model.GetProperty("Id")?.SetValue(item2, 2);
+            model.GetProperty("Name")?.SetValue(item2, "Earth");
+            model.GetProperty("OrbitedObjectId")?.SetValue(item2, 1);
 
             var optionsBuilder = new DbContextOptionsBuilder();
             optionsBuilder.UseInMemoryDatabase("Test2");
